@@ -35,12 +35,10 @@ Answer the question based on the above context: {question}
 """
 
         if not os.path.exists(self.CHROMA_PATH):
-            print("Generating embeddings for the documents...")
             documents = self.load_documents()
             chunks = self.split_documents(documents)
             self.db = self.generate_n_save_embeddings(chunks)
         else:
-            print("Loading embeddings from the database...")
             self.db = self.generate_n_save_embeddings([])
 
     def load_documents(self) -> list[Document]:
