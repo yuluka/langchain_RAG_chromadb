@@ -33,9 +33,9 @@ class Bot:
 
         self.message_history = [{"role": "system", "content": context}]
 
-        if self.MODEL == "GPT 3.5-Turbo" or self.MODEL == "GPT 4":
+        if self.MODEL == "gpt-3.5-turbo" or self.MODEL == "gpt-4o":
             self.init_openai()
-        elif self.MODEL == "Llama 3.1 by Groq":
+        elif self.MODEL == "llama3-70b-8192":
             self.init_groq_llama3()
         else:
             self.init_pipeline()
@@ -83,9 +83,9 @@ class Bot:
         :rtype: str
         """
 
-        if self.MODEL == "GPT 3.5-Turbo" or self.MODEL == "GPT 4":
+        if self.MODEL == "gpt-3.5-turbo" or self.MODEL == "gpt-4o":
             return self.chat_openai(message)
-        elif(self.MODEL == "Llama 3.1 by Groq"):
+        elif(self.MODEL == "llama3-70b-8192"):
             return self.chat_llama3(message)
         else:
             return self.chat_local(message)
@@ -100,7 +100,20 @@ class Bot:
         :rtype: str
         """
 
-        pass
+        self.message_history.append({"role": "user", "content": message})
+
+        completion = self.client.chat.completions.create(
+            model=self.MODEL,
+            messages=self.message_history,
+            temperature=1,
+        )
+
+        response = completion.choices[0].message.content or ""
+
+        self.message_history.append({"role": "assistant", "content": response})
+
+        return response
+
 
     def chat_llama3(self, message: str) -> str:
         """

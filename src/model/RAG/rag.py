@@ -1,11 +1,10 @@
 import os
-import shutil
 
 import unstructured
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from langchain_community.document_loaders import DirectoryLoader
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import Document
 
@@ -40,6 +39,13 @@ Answer the question based on the above context: {question}
         self.db = self.generate_n_save_embeddings(chunks)
 
     def load_documents(self) -> list[Document]:
+        """	
+        Load the documents from the data directory.
+
+        :return: The documents.
+        :rtype: list[Document]
+        """
+        
         loader = DirectoryLoader(self.DATA_PATH, glob="*.md")
         documents = loader.load()
         
@@ -77,8 +83,12 @@ Answer the question based on the above context: {question}
         """
 
         if os.path.exists(self.CHROMA_PATH):
-            # os.remove(self.CHROMA_PATH)// insufficient permission
-            shutil.rmtree(self.CHROMA_PATH)
+            db = Chroma(
+                persist_directory=self.CHROMA_PATH,
+                embedding_function=OpenAIEmbeddings(),
+            )
+
+            return db
 
         db = Chroma.from_documents(
             documents=chunks, 
