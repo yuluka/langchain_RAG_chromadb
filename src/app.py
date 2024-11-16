@@ -27,7 +27,7 @@ model_dir = ""
 
 if model == "gpt-3.5-turbo" or model == "gpt-4o":
     api_key = OPENAI_API_KEY
-elif model == "Llama 3.1 by Groq":
+elif model == "llama3-70b-8192":
     api_key = GROQ_API_KEY
 elif model == "Llama-3.2-3B-Instruct":
     api_key = GROQ_API_KEY

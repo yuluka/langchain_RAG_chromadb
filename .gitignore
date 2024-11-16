@@ -1,4 +1,4 @@
-data/About me.md
+data/
 chroma/
 venv/
 
@@ -6,3 +6,5 @@ venv/
 
 __pycache__/
 *.pyc
+
+*.ipynb
